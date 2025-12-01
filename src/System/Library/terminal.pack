@@ -1,0 +1,29 @@
+
+
+
+globalThis.parseCommand = function(x){
+  x = x.split(' ')
+  let f = x.shift()
+  return eval(`${f}(...x)`)
+}
+
+globalThis.cd = function(x){
+  terminalPath = x
+  return terminalPath
+}
+globalThis.home = function(){
+  terminalPath = ""
+  return
+}
+globalThis.echo = function(x){
+  return log("terminal", parseCommand(X))
+}
+globalThis.ls = function(){
+  let x = getFile(terminalPath).contents
+  x = x.map(v => getFile(v)).map(v => v.name + v.extension)
+  return log("terminal", x)
+}
+globalThis.touch = function(x, y){
+  return log("terminal", newFile(x, y))
+}
+terminalPath = followPath("User")
