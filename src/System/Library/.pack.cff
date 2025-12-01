@@ -1,0 +1,9 @@
+
+try{
+let j = eval(getFile(data).contents)
+log("pack.cff", `Succesfully decompressed file ${data}`)
+}
+catch(error){
+log("pack.cff", `Unable to decompress file ${data}: Error ${error}`)
+}
+"HALT"
