@@ -5,6 +5,7 @@ function onPlayerClick(id){
 		registerClick = true
 	}
 }
+user = 99999
 function log(x, y){
 	api.broadcastMessage(`minos-module-${x}: ${y}`)
 }
@@ -33,7 +34,7 @@ function setFile(x,z){
 		}
 	} catch {
 		log("kernel","Warning: setFile not working")
-		requestExecFunction(() => setFile(x, z), "")
+		//requestExecFunction(() => setFile(x, z), "")
 	}
 }
 function setFileAttribute(x,a,z){
@@ -82,7 +83,7 @@ function newFile(z,x){
   setFile(z, f)
   setFile(r.fileCount, x)
   setFile(-1, r)
-  log("kernel", `Succesful File Created: ${x}`)
+  log("kernel", `Succesful File Created: ${x.name + x.extension}`)
   return r.fileCount
 }
 
@@ -90,6 +91,7 @@ function boot(id){
   functions = {tick: 0, stack: {}}
   user = id
   loadChunk(0)
+  requestExecFunction(() => (executeCFF('.pack', 'System/Library/init.pack')), '')
   requestExecFunction(init, 'bootupCode')
   log("kernel", "Succesful Boot")
 }
@@ -160,4 +162,3 @@ function tick(){
 		}
 	}
 }
-executeCFF('.pack', 'System/Library/launcher.pack')
