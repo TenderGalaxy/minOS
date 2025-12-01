@@ -1,5 +1,4 @@
 
-
 function onPlayerClick(id){
 	if(id == user){
 		registerClick = true
@@ -91,8 +90,8 @@ function boot(id){
   functions = {tick: 0, stack: {}}
   user = id
   loadChunk(0)
-  requestExecFunction(() => (executeCFF('.pack', 'System/Library/init.pack')), '')
-  requestExecFunction(init, 'bootupCode')
+  executeCFF('.pack', 'System/Library/init.pack')
+  requestExecFunction(() => init(), 'bootupCode')
   log("kernel", "Succesful Boot")
 }
 
@@ -110,22 +109,6 @@ function execute(file){
 	executeCFF(m,file)
 }
 
-/* Legacy Scheduler
-
-function requestExecFunction(func, resultOutputName){
-  functions.toRun[functions.toRun.length] = [func, resultOutputName]
-}
-function executeFunction(){
-  if(functions.toRun.length > 0){
-	let func = functions.toRun.shift()
-	functions.results[func[1]] = func[0]()
-  }
-}
-function tick(){
-	executeFunction()
-}
-
-*/
 functions = {tick: 0, stack: {}}
 function requestExecFunction(func, dummy){ // Legacy Handler
 	scheduleFirstUnused(func)
@@ -148,17 +131,16 @@ function scheduleLast(x,shift=1,onError = null){
 	let m = max(...functions.stack.keys + functions.tick) + shift
 	functions.stack[m] = [{exec: x, onError: onError}]
 }
-function tick(){
-	functions.tick++
-	if(toDo = functions.stack[functions.tick]){
-		delete functions.stack[functions.tick]
-		for(const i of toDo){
-			try{
-				i.exec()
-			} catch(error) {
-				log("kernel", `ApiError: ${error}`)
-				i.onError(error)
-			}
+function minitick(){
+	if(Object.keys(functions.stack).includes(functions.tick.toString())){
+		let m = functions.stack[functions.tick]
+		for(let i of m){
+			try{i.exec()}catch(error){log("kernel", `Error: ${error}`); i.onError()}
 		}
+		delete functions.stack[functions.tick]
 	}
+	functions.tick++
+}
+function tick(){
+	minitick()
 }
