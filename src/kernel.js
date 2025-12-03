@@ -132,7 +132,8 @@ function scheduleLast(x,shift=1,onError = null){
 	functions.stack[m] = [{exec: x, onError: onError}]
 }
 function minitick(){
-	if(Object.keys(functions.stack).includes(functions.tick.toString())){
+// Contributed by bulebrainbrand
+	if(Object.hasOwn(functions.stack,functions.tick.toString())){
 		let m = functions.stack[functions.tick]
 		for(let i of m){
 			try{i.exec()}catch(error){log("kernel", `Error: ${error}`); i.onError()}
