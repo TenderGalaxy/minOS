@@ -91,7 +91,9 @@ globalThis.Window = class{
     }
     for(let j = 0; j < this.x; j++){
       for(let z = 0; z < this.y; z++){
-        screen[this.startx + j][this.starty + z] = this.win[z][j]
+        if(inBounds(this.startx+j,0,config.displayx) && inBounds(this.starty + z, 0, config.displayy){
+          screen[this.startx + j][this.starty + z] = this.win[z][j]
+        }
       }
     }
   }
