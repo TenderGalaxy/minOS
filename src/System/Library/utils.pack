@@ -4,3 +4,6 @@ globalThis.inBounds = function(x,y,z){
 globalThis.log = function(x, y){
   api.broadcastMessage(`module-minos-${x}: ${y}`)
 }
+globalThis.convert = function(x){
+  return list.map(i => (i == "#" || i == "1" ? config.dark : config.light))
+}
