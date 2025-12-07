@@ -5,7 +5,7 @@ setFile(0, {name:  'root', extension: '', contents: [1, 13]})
 
 setFile(1, {name: 'System', extension: '', contents: [2]})
 
-setFile(2, {name: 'Library', extension: '', contents: [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14]})
+setFile(2, {name: 'Library', extension: '', contents: [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15]})
 
 setFile(3, {name: 'buttons', extension: '.pack', contents: `
 require('display.pack')
@@ -164,3 +164,5 @@ globalThis.init = function(){
   return 1
 }
 `})
+
+setFile(15, {name: 'draggableWindows', extension: '.pack', contents: 'globalThis.dragWindow=class extends Button{constructor(t,s,r,i,a){super(t,s,r,i,a),this.isDragged=!1,this.drawImg(2,2,[[config.dark,config.dark,config.dark],[config.dark,config.dark,config.dark],[config.dark,config.dark,config.dark]]),clickFunctions.push(()=>this.drag())}drawImg(t,s,r){for(let[i,a]of r.entries())for(let[e,h]of a.entries())this.setPixel(t+i,s+e,h)}cursorOnWindow(){return inBounds(userCursorPos[0],this.startx,this.startx+this.x)&&inBounds(userCursorPos[1],this.starty,this.starty+this.y)}drag(){if(clickFunctions.push(()=>this.drag()),this.cursorOnWindow()&&(this.isDragged=!this.isDragged,this.isDragged)){let t=this.getParams();this.relative=[userCursorPos[0]-t.startx,userCursorPos[1]-t.starty],inBounds(this.relative[0],2,4)&&inBounds(this.relative[1],2,4)&&scheduleFirstUnused(()=>this.follow())}}follow(){this.isDragged?(this.startx=userCursorPos[0]-this.relative[0],this.starty=userCursorPos[1]-this.relative[1]):scheduleFirstUnused(()=>this.follow())}};'})
