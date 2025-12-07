@@ -1,10 +1,14 @@
 globalThis.drawDisplay = function(id = user){
+  scheduleFirstUnused(drawDisplay)
   screen = Array.from({length: config.displayy}, () => Array(config.displayx).fill(config.light))
   try{
     buffer = getFile("System/buffer.json").contents
   } catch {
     buffer = Array.from({length: config.displayy}, () => Array(config.displayx).fill(config.light))
     newFile("System", {name: "buffer", extension: ".json", contents: buffer})
+  }
+  if(screen == buffer){
+    return
   }
   for(let i of Object.values(windows)){
     i.render()
