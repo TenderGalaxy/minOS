@@ -21,7 +21,7 @@ globalThis.dis = function(){
   if(disy < config.displayy - 1){
     requestExecFunction(dis, '')
     while(1){
-      if{buffer[disy][disx] != screen[disy][disx]}api.setBlock([disx - config.displayx/2,config.displayy - disy,50], screen[disy][disx])
+      if(buffer[disy][disx] != screen[disy][disx])api.setBlock([disx - config.displayx/2,config.displayy - disy,50], screen[disy][disx])
       disx++
       if(disx == config.displayx){
         disy++
