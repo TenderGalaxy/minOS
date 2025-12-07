@@ -140,7 +140,7 @@ setFile(9, {name: 'requirements', extension: '.json', contents: [
 ]})
 setFile(10, {name: 'terminal', extension: '.pack', contents: 'globalThis.parseCommand=function(x){let f;return eval(`${(x=x.split(" ")).shift()}(...x)`)},globalThis.cd=function(n){return terminalPath=n},globalThis.home=function(){terminalPath=""},globalThis.echo=function(n){return log("terminal",parseCommand(X))},globalThis.ls=function(){let n=getFile(terminalPath).contents;return log("terminal",n=n.map(n=>getFile(n)).map(n=>n.name+n.extension))},globalThis.touch=function(n,t){return log("terminal",newFile(n,t))},terminalPath=followPath("User");'})
 
-setFile(11, {name: 'utils', extension: '.pack', contents: 'globalThis.inBounds=function(n,o,s){return n>o&&n<s},globalThis.log=function(n,o){api.broadcastMessage(`module-minos-${n}: ${o}`)};'})
+setFile(11, {name: 'utils', extension: '.pack', contents: 'globalThis.inBounds=function(n,o,t){return n>o&&n<t},globalThis.log=function(n,o){api.broadcastMessage(`module-minos-${n}: ${o}`)},globalThis.convert=function(n){return list.map(n=>"#"==n||"1"==n?config.dark:config.light)};'})
 
 
 setFile(12, {name: '.pack', extension: '.cff', contents: 'try{let j=eval(getFile(data).contents);log("pack.cff",`Succesfully decompressed file ${data}`)}catch(error){log("pack.cff",`Unable to decompress file ${data}: Error ${error}`)}"HALT"'})
