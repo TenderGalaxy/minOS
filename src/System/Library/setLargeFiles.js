@@ -14,7 +14,7 @@ globalThis.files = {
   renameFileName(file, name){
     let r = name.split('.')
     setFileAttribute(file, 'extension', r.at(-1))
-    r = r.pop()
+    r.pop()
     r = r.join('.')
     setFileAttribute(file, 'name', r)
     return true
@@ -64,3 +64,17 @@ globalThis.setFile = function(file, contents){
     }
   }
 }
+
+globalThis.setFileSimple = function(loc, name, contents, under=0){
+  let r = name.split('.')
+  let m = r.pop()
+  r = r.join('.')
+  contents = Object.assign(contents, {name: r, extension: m})
+  setFile(loc, contents)
+  under = followPath(under)
+  a = getFile(under)
+  a.contents.append(loc)
+  setFile(under, a)
+  return true
+}
+
