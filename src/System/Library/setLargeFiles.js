@@ -1,12 +1,7 @@
 /*
 Robust SetFile system that extends on kernel
-
-setFile(file, data) : Set a file. If data is not an object that contains name, extension, and contents, then setFileAttribute will be used instead of setFile.
 */
 
-globalThis.setFile = function(file, contents){
-  
-}
 globalThis.files = {
   renameFile(file, name){
     setFileAttribute(file, 'name', name)
@@ -31,7 +26,7 @@ globalThis.files = {
     let a = js.lastIndexOf(',')
     js = js.slice(0,a) + '}'
     return JSON.parse(js)
-  }
+  },
   getFileHeader(file){ /* An easier way to obtain file headers without wasting RAM and TU by using getFile */
    let m = api.getBlockData(followPath(file), 1e5, 1).persisted?.shared?.c
     return getPartialJSON(m)
@@ -39,5 +34,33 @@ globalThis.files = {
   setFilePage(file, n, x){ /* internal function, usage is not recommended as it can corrupt the file by disrupting the JSON parsing and removing information*/
     setBlockData([followPath(file), 1e5, n], {persisted: {shared: {c: JSON.stringify(x)}}})
     return true
+  }
+}
+
+function setFileSingleTick(x,z){
+  let n = z.match(/.{1,300}/g)
+  let m = followPath(x)
+  if(!api.isBlockInLoadedChunk(1e5,m,0)){
+    loadChunk(m)
+    scheduleFirstUnused(() => (setFileSingleTick(x, z), functions.tick + 3))
+    log('setLargeFiles.pack', 'Chunk unloaded, will schedule next tick.')
+  } else {
+  	api.setBlockData(1e5, m, 0, {persisted: {shared: {c: n.length}}})
+  	for(let i = 0; i < n.length; i++){
+    		api.setBlockData(1e5,m,i + 1,{persisted: {shared: {c: n[i]}}})
+  	}
+  }
+}
+globalThis.setFile = function(file, contents){
+  contents = JSON.stringify(contents)
+  file = followPath(file)
+  if(contents.length < 20000){
+    setFileSingleTick(file, contents)
+  } else {
+    contents = contents.match(/.{1,300}/g)
+    files.setFilePage(file, 0, contents.length)
+    for(let i = 0; i < contents.length; i++){
+      schedule(() => files.setFilePage(file, i, contents[i]), Math.floor(i/10)+1)
+    }
   }
 }
